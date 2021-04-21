@@ -24,20 +24,23 @@ public class UserController {
     // The one true function for getting User data from the database
     @GetMapping
     public Page<User> findUsers(@RequestParam(value = "age", defaultValue = "") String age,
-                                @RequestParam(value = "name", defaultValue = "") String name,
+                                @RequestParam(value = "lastname", defaultValue = "") String lastname,
                                 Pageable pageable) {
 
-        logger.info(String.format("findUsers(age=<%s>, name=<%s>)", age, name));
+        // This regex ensures that the string is only match in the last name
+        // Assuming there is at most one space in a name
+        String lnamePattern = "% %" + lastname + "%";
+        logger.info(String.format("findUsers(age=<%s>, lastname=<%s>, pattern=<%s>)", age, lastname, lnamePattern));
 
         // demux by optional arguments to the appropriate query
-        if (age.isEmpty() && name.isEmpty()) {
+        if (age.isEmpty() && lastname.isEmpty()) {
             return userRepo.findAll(pageable);
         } else if (age.isEmpty()) {
-            return userRepo.findByNameContainingIgnoreCase(name, pageable);
-        } else if (name.isEmpty()) {
+            return userRepo.findByNameLikeIgnoreCase(lnamePattern, pageable);
+        } else if (lastname.isEmpty()) {
             return userRepo.findByAge(Integer.parseInt(age), pageable);
         } else {
-            return userRepo.findByNameContainingIgnoreCaseAndAge(name, Integer.parseInt(age), pageable);
+            return userRepo.findByNameLikeIgnoreCaseAndAge(lnamePattern, Integer.parseInt(age), pageable);
         }
     }
 }
