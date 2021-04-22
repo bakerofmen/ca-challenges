@@ -32,6 +32,15 @@ public class UserController {
         String lnamePattern = "% %" + lastname + "%";
         logger.info(String.format("findUsers(age=<%s>, lastname=<%s>, pattern=<%s>)", age, lastname, lnamePattern));
 
+        // handle non-numeric and negative age
+        try {
+            if (Integer.parseInt(age) < 0) {
+                age = "";
+            }
+        } catch (Throwable t) {
+            age = "";
+        }
+
         // demux by optional arguments to the appropriate query
         if (age.isEmpty() && lastname.isEmpty()) {
             return userRepo.findAll(pageable);
