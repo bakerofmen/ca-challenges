@@ -15,6 +15,8 @@ import {
     Row,
     Table,
 } from 'react-bootstrap'
+import './main.css';
+import sortIcon from './sorticon.png';
 
 // The tutorial had a custom JSON handler, but I want to use window.fetch
 //const client = require('./client');
@@ -30,9 +32,9 @@ class App extends React.Component {
 		    totalElements: 0,
 		    pageNumber: 1,
 		    rowsPerPage: 10,
-		    lastName: undefined,
-		    age: undefined,
-		    sort: undefined
+		    lastName: "",
+		    age: "",
+		    sort: ""
 		};
 	}
 
@@ -52,13 +54,15 @@ class App extends React.Component {
 	    fetch('/users?' + new URLSearchParams({
             // TODO sort
             // force page between 1 and totalPages, then subtract 1
-	        page: Math.min(Math.max(1, +nextState.pageNumber), nextState.totalPages)-1,
-            // force size between 1 and totalElements
-	        size: Math.min(Math.max(1, +nextState.rowsPerPage), nextState.totalElements),
+	        page: Math.min(Math.max(1, +nextState.pageNumber), nextState.totalPages||1)-1,
+            // force size between 10 and totalElements
+	        size: Math.max(Math.min(+nextState.rowsPerPage, nextState.totalElements), 10),
             // use "" as a fallback for lastName
             lastname: nextState.lastName || "",
             // force age to be positive or else use "" as a fallback for age
             age: Math.max(0, +nextState.age) || "",
+            // sort
+            sort: nextState.sort || ""
 	    }), {
 	        method: 'GET',
 	    }).then((resp) => {
@@ -86,13 +90,52 @@ class App extends React.Component {
 		return (
             <Container fluid>
               <TableHeadNavRow updateState={this.queryUsers.bind(this)}/>
-              <UserTable users={this.state.users}/>
+              <UserTable users={this.state.users} updateState={this.queryUsers.bind(this)}/>
             </Container>
 		)
 	}
 }
 
 class UserTable extends React.Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {
+		    sortField: null,
+		    direction: null
+		};
+	}
+
+	incrementDirection(direction) {
+	    if (direction == 'asc') {
+	        return 'desc';
+	    } else if (direction == 'desc') {
+	        return null;
+	    } else {
+	        return 'asc';
+	    }
+	}
+
+    sortBy(newField) {
+        let newDir = 'asc';
+        if (this.state.sortField == newField) {
+            newDir = this.incrementDirection(this.state.direction);
+            if (newDir) {
+                // if we're already sorted on this field, then switch directions
+                this.props.updateState({sort: newField + ',' + newDir});
+            } else {
+                // if we're already descending, just unsort
+                newField = null;
+                this.props.updateState({sort: null});
+            }
+        } else {
+            // we weren't sorted on this field before, so do it ascending
+            this.props.updateState({sort: newField + ',asc'});
+        }
+
+        this.setState({sortField: newField, direction: newDir});
+    }
+
 	render() {
 		const users = this.props.users.map(user =>
 			<User key={user.id} user={user}/>
@@ -101,8 +144,8 @@ class UserTable extends React.Component {
 			<Table striped bordered hover size="sm">
 				<tbody>
 					<tr>
-						<th>Name</th>
-						<th>Age</th>
+						<th className="sortable" onClick={() => this.sortBy('name')}> Name <img src={sortIcon} style={{ height: '0.8em' }} /></th>
+						<th className="sortable" onClick={() => this.sortBy('age')}>Age <img src={sortIcon} style={{ height: '0.8em' }} /></th>
 						<th>Address</th>
 					</tr>
 					{users}
