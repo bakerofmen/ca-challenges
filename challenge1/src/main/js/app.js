@@ -3,6 +3,9 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Table from 'react-bootstrap/Table'
+
 // The tutorial had a custom JSON handler, but I want to use window.fetch
 //const client = require('./client');
 
@@ -47,7 +50,7 @@ class UserTable extends React.Component {
 			<User key={user.id} user={user}/>
 		);
 		return (
-			<table>
+			<Table>
 				<tbody>
 					<tr>
 						<th>Name</th>
@@ -56,7 +59,7 @@ class UserTable extends React.Component {
 					</tr>
 					{users}
 				</tbody>
-			</table>
+			</Table>
 		)
 	}
 }
