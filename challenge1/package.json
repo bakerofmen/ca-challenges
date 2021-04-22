@@ -30,7 +30,8 @@
   },
   "scripts": {
     "build": "webpack",
-    "watch": "webpack --watch -d"
+    "watch": "webpack --watch -d",
+    "start": "webpack && ./mvnw spring-boot:run"
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",
