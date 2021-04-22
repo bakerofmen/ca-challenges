@@ -94,7 +94,6 @@ class App extends React.Component {
 
 class UserTable extends React.Component {
 	render() {
-	    console.error("Rendering UserTable!", this.props);
 		const users = this.props.users.map(user =>
 			<User key={user.id} user={user}/>
 		);
@@ -130,10 +129,12 @@ class TableHeadNavRow extends React.Component {
         return (
             <Row>
                 <Col md={3}>
-                    <AnInput onChange={(e) => this.props.updateState({pageNumber: e.target.value})} label="Page number" />
+                    <AnInput onChange={(e) => this.props.updateState({pageNumber: e.target.value})}
+                             label="Page number" placeholder={1} />
                 </Col>
                 <Col md={3}>
-                    <AnInput onChange={(e) => this.props.updateState({rowsPerPage: e.target.value})} label="Rows per page" />
+                    <AnInput onChange={(e) => this.props.updateState({rowsPerPage: e.target.value})}
+                             label="Rows per page" placeholder={10} />
                 </Col>
                 <Col md={3}>
                     <AnInput onChange={(e) => this.props.updateState({age: e.target.value})} label="Age" />
@@ -153,7 +154,7 @@ class AnInput extends React.Component {
                 <InputGroup.Prepend>
                     <InputGroup.Text id="btnGroupAddon">{this.props.label}</InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl type="text" onChange={this.props.onChange}/>
+                <FormControl type="text" placeholder={this.props.placeholder} onChange={this.props.onChange}/>
             </InputGroup>
         )
     }
