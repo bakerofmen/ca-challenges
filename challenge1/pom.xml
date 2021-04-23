@@ -14,6 +14,7 @@
 	<name>challenge1</name>
 	<description>Challenge1</description>
 	<properties>
+		<skipTests>true</skipTests>
 		<java.version>11</java.version>
 		<start-class>com.baker.challenge1.Challenge1Application</start-class>
 	</properties>

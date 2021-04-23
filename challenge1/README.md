@@ -18,21 +18,10 @@ Deliverable:
 - A simple Web UI (Angular, React) demonstrating the use cases is a plus but not a must.
 - Source code preferable shared on GitHub.
 
-## Developer Setup
-### Database
-To load 1 million random users into the database, do the following
-
-1. Install MySQL
-2. Set up a user springuser
-3. `cd db_setup && ./create_users.sh`
-
-### Frontend build
-1. Install npm
+## To build and run
+1. Install npm and docker-compose
 2. `npm install` to get all dependency packages
 3. `npm run build` to generate the bundle.js
-
-### Backend build
-1. Install maven
-2. a) For dev, it suffices to run `mvnw spring-boot:run`.
-   b) For release, run `mvnw package`.
+4. Run `./mvnw package` to generate backend jar
+5. Run `docker-compose up` as root to start the application
 
