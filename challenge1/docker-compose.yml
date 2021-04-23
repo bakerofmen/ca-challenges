@@ -1,0 +1,20 @@
+version: "3"
+services:
+  web:
+    image: openjdk:14
+    network_mode: host
+    volumes:
+      - ./target/challenge1-0.0.1-SNAPSHOT.jar:/challenge1.jar
+    command: java -jar /challenge1.jar
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:latest
+    network_mode: host
+    volumes:
+      - ./db_setup/user.sql:/docker-entrypoint-initdb.d/dump.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=db_example
+      - MYSQL_USER=springuser
+      - MYSQL_PASSWORD=ThePassword

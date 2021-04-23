@@ -32,6 +32,7 @@
     "build": "webpack",
     "watch": "webpack --watch -d",
     "start": "webpack && ./mvnw spring-boot:run"
+    "package": "webpack && ./mvnw package -Dmaven.test.skip=true"
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",
